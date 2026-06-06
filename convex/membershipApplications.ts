@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 
-import { appendChangelogEntry } from "./lib/changelog";
+import { appendChangelogEntry, getChangelogUserName } from "./lib/changelog";
 import { mutation } from "./_generated/server";
 
 const titleValidator = v.union(
@@ -77,6 +77,7 @@ export const submit = mutation({
         description: "Application submitted",
         timestamp: createdAt,
         userId: submitterId,
+        userName: getChangelogUserName(identity, submitterId),
       }),
       clerkUserId: identity?.subject,
       createdAt,

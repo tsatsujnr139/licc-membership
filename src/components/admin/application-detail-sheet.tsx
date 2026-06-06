@@ -14,6 +14,7 @@ import type { ApplicationStatus } from "@/lib/application-status";
 import { formatApplicationDate, formatApplicationDateString } from "@/lib/format-application-date";
 import { formatAvailability } from "@/lib/format-availability";
 
+import { formatChangelogActorLabel } from "../../../convex/lib/changelog";
 import type { Doc } from "../../../convex/_generated/dataModel";
 
 type Application = Doc<"memberApplications"> & {
@@ -267,7 +268,7 @@ export const ApplicationDetailSheet = ({
                         <p className="text-sm">{entry.description}</p>
                         <p className="text-xs text-muted-foreground">
                           {formatApplicationDate(entry.timestamp)} ·{" "}
-                          {entry.userId}
+                          {formatChangelogActorLabel(entry)}
                         </p>
                       </li>
                     ))}

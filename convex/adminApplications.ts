@@ -2,7 +2,7 @@ import { v } from "convex/values";
 
 import type { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
-import { appendChangelogEntry } from "./lib/changelog";
+import { appendChangelogEntry, getChangelogUserName } from "./lib/changelog";
 import { checkAdminAccess, requireAdmin } from "./lib/auth";
 
 type ApplicationStatus = "pending" | "approved" | "rejected";
@@ -138,6 +138,7 @@ export const review = mutation({
       description,
       timestamp: now,
       userId: actorId,
+      userName: getChangelogUserName(identity, actorId),
     });
 
     if (args.status === "approved") {
