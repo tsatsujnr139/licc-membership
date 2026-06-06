@@ -64,6 +64,7 @@ function ToggleGroupItem({
       data-variant={context.variant || variant}
       data-size={context.size || size}
       data-spacing={context.spacing}
+      type="button"
       className={cn(
         toggleVariants({
           size: context.size || size,

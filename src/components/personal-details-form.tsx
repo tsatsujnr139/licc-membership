@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
 
 import { FormStepper } from "@/components/form-stepper";
@@ -106,11 +106,20 @@ export const PersonalDetailsForm = () => {
   const activeStep = formSteps[currentStep - 1];
   const acceptedChrist = form.watch("acceptedChrist");
   const availableYearRound = form.watch("availableYearRound");
+  const finishedDiscipleship = form.watch("finishedDiscipleship");
   const taughtSundaySchool = form.watch("taughtSundaySchool");
   const sundaySchoolTraining = form.watch("sundaySchoolTraining");
 
   const goToNextStep = async () => {
     const fields = [...activeStep.fields];
+
+    if (currentStep === 2 && form.getValues("finishedDiscipleship") !== "yes") {
+      const leaderIndex = fields.indexOf("discipleshipLeader");
+      if (leaderIndex !== -1) {
+        fields.splice(leaderIndex, 1);
+      }
+    }
+
     const isValid = await form.trigger(fields);
 
     if (!isValid) {
@@ -135,11 +144,36 @@ export const PersonalDetailsForm = () => {
       }
     }
 
+    if (currentStep === 2) {
+      const values = form.getValues();
+
+      if (
+        values.finishedDiscipleship === "yes" &&
+        !values.discipleshipLeader?.trim()
+      ) {
+        form.setError("discipleshipLeader", {
+          message: "Discipleship leader is required",
+        });
+        return;
+      }
+    }
+
     setCurrentStep((step) => Math.min(step + 1, formSteps.length));
   };
 
   const goToPreviousStep = () => {
     setCurrentStep((step) => Math.max(step - 1, 1));
+  };
+
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (currentStep < formSteps.length) {
+      void goToNextStep();
+      return;
+    }
+
+    void form.handleSubmit(onSubmit)(event);
   };
 
   const onSubmit = async (values: PersonalDetailsFormValues) => {
@@ -194,7 +228,7 @@ export const PersonalDetailsForm = () => {
       </CardHeader>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleFormSubmit}>
           <CardContent className="flex flex-col gap-6 pb-8">
             {currentStep === 1 ? (
               <div className="grid gap-6 md:grid-cols-2">
@@ -356,6 +390,7 @@ export const PersonalDetailsForm = () => {
                         <PhoneInput
                           defaultCountry="GH"
                           onChange={field.onChange}
+                          placeholder="241111111"
                           value={field.value}
                         />
                       </FormControl>
@@ -373,6 +408,7 @@ export const PersonalDetailsForm = () => {
                         <PhoneInput
                           defaultCountry="GH"
                           onChange={field.onChange}
+                          placeholder="241111111"
                           value={field.value}
                         />
                       </FormControl>
@@ -477,7 +513,7 @@ export const PersonalDetailsForm = () => {
                         <FormLabel>Please share your availability</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="e.g. Jan–Jun, school holidays only"
+                            placeholder="e.g. Jan–Jun, October - December"
                             {...field}
                           />
                         </FormControl>
@@ -506,21 +542,27 @@ export const PersonalDetailsForm = () => {
                   label="Have you finished the LIC discipleship training programme?"
                   name="finishedDiscipleship"
                 />
-                <FormField
-                  control={form.control}
-                  name="discipleshipLeader"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Who was the leader of your Discipleship Training Group?
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter leader's name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {finishedDiscipleship === "yes" ? (
+                  <FormField
+                    control={form.control}
+                    name="discipleshipLeader"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Who was the leader of your Discipleship Training
+                          Group?
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter leader's name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : null}
               </div>
             ) : null}
 

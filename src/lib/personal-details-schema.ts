@@ -52,7 +52,7 @@ export const personalDetailsSchema = z
       .max(10, "Maximum is 10"),
     childrenAgeGroup: z.string().optional(),
     christKnownDuration: z.enum(christKnownDurationOptions).optional(),
-    discipleshipLeader: z.string().min(1, "Discipleship leader is required"),
+    discipleshipLeader: z.string(),
     email: z.string().email("Enter a valid email address"),
     finishedDiscipleship: z.enum(yesNoOptions, {
       message: "Please answer this question",
@@ -127,6 +127,17 @@ export const personalDetailsSchema = z
         code: "custom",
         message: "Please indicate your availability",
         path: ["availableMonths"],
+      });
+    }
+
+    if (
+      data.finishedDiscipleship === "yes" &&
+      !data.discipleshipLeader?.trim()
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Discipleship leader is required",
+        path: ["discipleshipLeader"],
       });
     }
 
