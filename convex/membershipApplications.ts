@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 
-import { appendChangelogEntry, getChangelogUserName } from "./lib/changelog";
 import { mutation } from "./_generated/server";
 
 const titleValidator = v.union(
@@ -69,16 +68,9 @@ export const submit = mutation({
     const identity = await ctx.auth.getUserIdentity();
 
     const createdAt = Date.now();
-    const submitterId = identity?.subject ?? "anonymous";
 
     return await ctx.db.insert("memberApplications", {
       ...args,
-      changelog: appendChangelogEntry(undefined, {
-        description: "Application submitted",
-        timestamp: createdAt,
-        userId: submitterId,
-        userName: getChangelogUserName(identity, submitterId),
-      }),
       clerkUserId: identity?.subject,
       createdAt,
       status: "pending",
