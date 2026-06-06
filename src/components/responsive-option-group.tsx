@@ -43,7 +43,7 @@ export const ResponsiveOptionGroup = ({
       {options.map((option) => (
         <ToggleGroupItem
           key={option.value}
-          className="flex-1"
+          className="flex-1 data-[state=on]:bg-input data-[state=on]:text-foreground data-[state=on]:hover:bg-input/90 data-[state=on]:hover:text-foreground"
           value={option.value}
         >
           {option.label}

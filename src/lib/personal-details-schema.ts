@@ -41,7 +41,7 @@ export const personalDetailsSchema = z
     acceptedChrist: z.enum(yesNoOptions, {
       message: "Please answer this question",
     }),
-    area: z.string().min(1, "Area is required"),
+    area: z.string().min(1, "Residential area is required"),
     availableMonths: z.string().optional(),
     availableYearRound: z.enum(yesNoOptions, {
       message: "Please answer this question",

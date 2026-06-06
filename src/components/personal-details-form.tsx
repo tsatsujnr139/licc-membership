@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { FormStepper } from "@/components/form-stepper";
@@ -99,9 +99,46 @@ export const PersonalDetailsForm = () => {
 
   const form = useForm<PersonalDetailsFormValues>({
     defaultValues: defaultFormValues,
-    mode: "onTouched",
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
     resolver: zodResolver(personalDetailsSchema),
   });
+
+  const watchedValues = form.watch();
+  const previousValuesRef = useRef(watchedValues);
+
+  useEffect(() => {
+    const previousValues = previousValuesRef.current;
+    const changedFields = new Set<keyof PersonalDetailsFormValues>();
+
+    for (const key of Object.keys(watchedValues) as (keyof PersonalDetailsFormValues)[]) {
+      if (watchedValues[key] !== previousValues[key]) {
+        changedFields.add(key);
+      }
+    }
+
+    if (changedFields.size > 0) {
+      for (const field of changedFields) {
+        if (form.formState.errors[field]) {
+          form.clearErrors(field);
+        }
+      }
+
+      if (changedFields.has("acceptedChrist")) {
+        form.clearErrors("christKnownDuration");
+      }
+
+      if (changedFields.has("availableYearRound")) {
+        form.clearErrors("availableMonths");
+      }
+
+      if (changedFields.has("finishedDiscipleship")) {
+        form.clearErrors("discipleshipLeader");
+      }
+    }
+
+    previousValuesRef.current = watchedValues;
+  }, [watchedValues, form]);
 
   const activeStep = formSteps[currentStep - 1];
   const acceptedChrist = form.watch("acceptedChrist");
@@ -677,8 +714,8 @@ export const PersonalDetailsForm = () => {
                     />
                   </>
                 ) : null}
-                <Alert>
-                  <AlertDescription>
+                <Alert className="border-blue-600 bg-blue-50 text-blue-800 dark:border-blue-400 dark:bg-blue-950/40 dark:text-blue-200">
+                  <AlertDescription className="text-inherit">
                     Please note that only registered church members are allowed
                     to teach Sunday School in LIC.
                   </AlertDescription>
