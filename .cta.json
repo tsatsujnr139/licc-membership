@@ -1,0 +1,29 @@
+{
+  "projectName": "liccm-onboarding",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "npm",
+  "includeExamples": false,
+  "tailwind": true,
+  "addOnOptions": {},
+  "envVarValues": {
+    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_d2hvbGUtY29yZ2ktOTUuY2xlcmsuYWNjb3VudHMuZGV2JA",
+    "CONVEX_DEPLOYMENT": "liccm-membership",
+    "VITE_CONVEX_URL": "https://jovial-crab-125.eu-west-1.convex.cloud"
+  },
+  "git": true,
+  "install": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "biome",
+    "nitro",
+    "clerk",
+    "sentry",
+    "shadcn",
+    "compiler",
+    "t3env",
+    "convex"
+  ]
+}

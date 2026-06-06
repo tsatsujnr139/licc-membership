@@ -1,0 +1,20 @@
+{
+  "short_name": "LICCM Membership",
+  "name": "Legon International Church Children's Ministry Membership",
+  "icons": [
+    {
+      "src": "lic-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "lic-logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#6d28d9",
+  "background_color": "#ede9fe"
+}
