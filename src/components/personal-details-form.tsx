@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { FormStepper } from "@/components/form-stepper";
@@ -165,15 +165,13 @@ export const PersonalDetailsForm = () => {
     setCurrentStep((step) => Math.max(step - 1, 1));
   };
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handlePrimaryAction = () => {
     if (currentStep < formSteps.length) {
       void goToNextStep();
       return;
     }
 
-    void form.handleSubmit(onSubmit)(event);
+    void form.handleSubmit(onSubmit)();
   };
 
   const onSubmit = async (values: PersonalDetailsFormValues) => {
@@ -228,7 +226,12 @@ export const PersonalDetailsForm = () => {
       </CardHeader>
 
       <Form {...form}>
-        <form onSubmit={handleFormSubmit}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            handlePrimaryAction();
+          }}
+        >
           <CardContent className="flex flex-col gap-6 pb-8">
             {currentStep === 1 ? (
               <div className="grid gap-6 md:grid-cols-2">
@@ -700,16 +703,22 @@ export const PersonalDetailsForm = () => {
                 Back
               </Button>
             ) : null}
-            {currentStep < formSteps.length ? (
-              <Button onClick={goToNextStep} type="button">
-                Next
-                <ChevronRightIcon data-icon="inline-end" />
-              </Button>
-            ) : (
-              <Button disabled={isSubmitting} type="submit">
-                {isSubmitting ? "Submitting..." : "Submit Application"}
-              </Button>
-            )}
+            <Button
+              disabled={isSubmitting}
+              onClick={handlePrimaryAction}
+              type="button"
+            >
+              {currentStep < formSteps.length ? (
+                <>
+                  Next
+                  <ChevronRightIcon data-icon="inline-end" />
+                </>
+              ) : isSubmitting ? (
+                "Submitting..."
+              ) : (
+                "Submit Application"
+              )}
+            </Button>
           </CardFooter>
         </form>
       </Form>
