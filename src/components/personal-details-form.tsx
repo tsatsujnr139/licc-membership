@@ -62,6 +62,15 @@ const yesNoOptionsList = yesNoOptions.map((option) => ({
   value: option,
 }));
 
+const SundaySchoolEligibilityNotice = () => (
+  <Alert className="border-blue-600 bg-blue-50 text-blue-800 dark:border-blue-400 dark:bg-blue-950/40 dark:text-blue-200">
+    <AlertDescription className="text-inherit">
+      Please note that only registered church members are allowed to teach
+      Sunday School in LIC.
+    </AlertDescription>
+  </Alert>
+);
+
 const YesNoField = ({
   name,
   label,
@@ -260,6 +269,7 @@ export const PersonalDetailsForm = () => {
           <CardTitle>{activeStep.title}</CardTitle>
           <CardDescription>{activeStep.description}</CardDescription>
         </div>
+        {currentStep === 1 ? <SundaySchoolEligibilityNotice /> : null}
       </CardHeader>
 
       <Form {...form}>
@@ -714,12 +724,6 @@ export const PersonalDetailsForm = () => {
                     />
                   </>
                 ) : null}
-                <Alert className="border-blue-600 bg-blue-50 text-blue-800 dark:border-blue-400 dark:bg-blue-950/40 dark:text-blue-200">
-                  <AlertDescription className="text-inherit">
-                    Please note that only registered church members are allowed
-                    to teach Sunday School in LIC.
-                  </AlertDescription>
-                </Alert>
               </div>
             ) : null}
           </CardContent>

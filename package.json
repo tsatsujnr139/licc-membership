@@ -13,6 +13,7 @@
     "typecheck": "dotenv -e .env.local -- tsc --noEmit",
     "start": "node --import ./.output/server/instrument.server.mjs .output/server/index.mjs",
     "fix": "ultracite fix",
+    "deploy:prod": "dotenv -e .env.local -- convex deploy --yes",
     "bones": "boneyard-js build http://localhost:3000/admin/applications --out src/bones"
   },
   "dependencies": {
